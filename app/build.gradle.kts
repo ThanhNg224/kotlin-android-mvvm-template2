@@ -44,9 +44,6 @@ android {
             "https://dummyjson.com/"
         }
 
-        /* TODO: Add base URL in local.properties file as:-
-         *  BASE_URL=https://dummyjson.com/
-        */
         buildConfigField("String", "BASE_URL", "\"${baseUrl}\"")
     }
 
@@ -89,6 +86,7 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.material.icons.extended)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -106,4 +104,5 @@ dependencies {
     ksp(libs.hilt.kapt)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.navigation.compose)
+    implementation(libs.datastore.preferences)
 }

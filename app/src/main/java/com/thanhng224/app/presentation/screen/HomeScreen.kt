@@ -44,11 +44,7 @@ fun HomeScreen(productDetails: ApiState<ProductDetailsDto>) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(GradientStart, GradientEnd)
-                        )
-                    ),
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
@@ -81,11 +77,7 @@ fun HomeScreen(productDetails: ApiState<ProductDetailsDto>) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(GradientStart, GradientEnd)
-                        )
-                    ),
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
@@ -127,8 +119,9 @@ fun HomeScreen(productDetails: ApiState<ProductDetailsDto>) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(Color.White)
                     .verticalScroll(rememberScrollState())
+                    .padding(bottom = 80.dp) // Add bottom padding
             ) {
                 // Header with gradient
                 Box(
