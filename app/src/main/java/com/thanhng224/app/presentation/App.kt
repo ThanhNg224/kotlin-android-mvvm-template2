@@ -169,7 +169,15 @@ fun App(
                     composable(Screen.Home.route) { HomeScreen(productDetails = productDetailsState) }
                     composable(Screen.Favorites.route) { FavoritesScreen() }
                     composable(Screen.Profile.route) { ProfileScreen() }
-                    composable(Screen.Settings.route) { SettingsScreen() }
+                    composable(Screen.Settings.route) {
+                        SettingsScreen(
+                            onLogout = {
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
+                        )
+                    }
                 }
 
                 if (showBottomBar) {
