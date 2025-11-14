@@ -45,62 +45,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.thanhng224.app.presentation.screen.FavoritesScreen
-import com.thanhng224.app.presentation.screen.HomeScreen
-import com.thanhng224.app.presentation.screen.LoginScreen
-import com.thanhng224.app.presentation.screen.OnboardingScreen
+import com.thanhng224.app.feature.product.presentation.ui.HomeScreen
+import com.thanhng224.app.feature.auth.presentation.ui.LoginScreen
+import com.thanhng224.app.feature.onboarding.presentation.ui.OnboardingScreen
 import com.thanhng224.app.presentation.screen.ProfileScreen
 import com.thanhng224.app.presentation.screen.SettingsScreen
-import com.thanhng224.app.presentation.viewmodel.HomeViewModel
-import com.thanhng224.app.repository.Repository
-import kotlinx.coroutines.flow.first
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    open val unreadCount: Int = 0
-
-    object Onboarding : Screen("onboarding", "Onboarding", Icons.Default.Home)
-    object Login : Screen("login", "Login", Icons.Default.Person)
-    object Home : Screen("home", "Home", Icons.Default.Home)
-    object Favorites : Screen("favorites", "Favorites", Icons.Default.Favorite) {
-        override val unreadCount: Int = 5
-    }
-    object Profile : Screen("profile", "Profile", Icons.Default.Person)
-    object Settings : Screen("settings", "Settings", Icons.Default.Settings)
-}
-
-@HiltViewModel
-class AppViewModel @Inject constructor(
-    private val repository: Repository
-) : ViewModel() {
-    private val _startDestination = MutableStateFlow<String?>(null)
-    val startDestination: StateFlow<String?> = _startDestination.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            val isFirstLaunch = repository.isFirstLaunch().first()
-            val isLoggedIn = repository.isLoggedIn().first()
-
-            _startDestination.value = when {
-                isFirstLaunch -> Screen.Onboarding.route
-                !isLoggedIn -> Screen.Login.route
-                else -> Screen.Home.route
-            }
-        }
-    }
-
-    fun completeOnboarding() {
-        viewModelScope.launch {
-            repository.setFirstLaunch(false)
-        }
-    }
-}
+import com.thanhng224.app.feature.product.presentation.viewmodel.HomeViewModel
+import com.thanhng224.app.presentation.navigation.Screen
+import com.thanhng224.app.presentation.viewmodel.AppViewModel
 
 @Composable
 fun App(
@@ -166,7 +118,7 @@ fun App(
                             }
                         )
                     }
-                    composable(Screen.Home.route) { HomeScreen(productDetails = productDetailsState) }
+                    composable(Screen.Home.route) { HomeScreen(productState = productDetailsState) }
                     composable(Screen.Favorites.route) { FavoritesScreen() }
                     composable(Screen.Profile.route) { ProfileScreen() }
                     composable(Screen.Settings.route) {

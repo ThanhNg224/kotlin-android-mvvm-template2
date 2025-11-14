@@ -2,21 +2,28 @@ package com.thanhng224.app.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thanhng224.app.repository.Repository
+import com.thanhng224.app.core.di.IoDispatcher
+import com.thanhng224.app.core.di.MainDispatcher
+import com.thanhng224.app.feature.auth.domain.usecases.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repository: Repository
+    private val logoutUseCase: LogoutUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     fun logout(onLogoutSuccess: () -> Unit) {
-        viewModelScope.launch {
-            repository.setLoggedIn(false)
-            onLogoutSuccess()
+        viewModelScope.launch(ioDispatcher) {
+            logoutUseCase()
+            withContext(mainDispatcher) {
+                onLogoutSuccess()
+            }
         }
     }
 }
-
