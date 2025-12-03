@@ -14,8 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @param:MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     fun logout(onLogoutSuccess: () -> Unit) {
