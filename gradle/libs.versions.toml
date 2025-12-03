@@ -1,6 +1,6 @@
 [versions]
 agp = "8.13.1"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 core-ktx = "1.17.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.3.0"
@@ -14,9 +14,9 @@ coroutines = "1.10.2"
 hilt-navigation-compose = "1.3.0"
 dagger-hilt = "2.57.2"
 coil = "2.7.0"
-navigation-compose = "2.9.5"
-ksp = "2.3.3"
-datastore = "1.2.0"
+navigation-compose = "2.9.6"
+ksp = "2.2.21-2.0.4"
+datastore = "1.1.7"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
