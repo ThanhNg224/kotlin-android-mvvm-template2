@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ProductRepositoryImpl @Inject constructor(
     private val remoteDataSource: ProductRemoteDataSource,
     private val localDataSource: ProductLocalDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ProductRepository {
 
     override suspend fun getProductDetails(): Result<ProductDetails> {
