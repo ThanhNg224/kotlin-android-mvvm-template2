@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="toast_corner_radius">16dp</dimen>
+    <dimen name="toast_border_width">1dp</dimen>
+    <dimen name="toast_padding_horizontal">16dp</dimen>
+    <dimen name="toast_padding_vertical">12dp</dimen>
+</resources>
