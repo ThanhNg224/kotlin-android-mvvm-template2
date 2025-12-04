@@ -1,4 +1,34 @@
 <resources>
-    // TODO: Set App Name
     <string name="app_name">Kotlin Android Template</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_profile_name">Admin User</string>
+    <string name="settings_profile_email">admin@example.com</string>
+    <string name="settings_preferences_title">Preferences</string>
+    <string name="settings_notifications_title">Notifications</string>
+    <string name="settings_notifications_subtitle">Enable push notifications</string>
+    <string name="settings_notifications_enabled_message">Notifications enabled</string>
+    <string name="settings_notifications_disabled_message">Notifications disabled</string>
+    <string name="settings_dark_mode_title">Dark Mode</string>
+    <string name="settings_dark_mode_subtitle">Switch to dark theme</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_subtitle">English</string>
+    <string name="settings_account_title">Account</string>
+    <string name="settings_edit_profile_title">Edit Profile</string>
+    <string name="settings_edit_profile_subtitle">Update your personal information</string>
+    <string name="settings_change_password_title">Change Password</string>
+    <string name="settings_change_password_subtitle">Update your password</string>
+    <string name="settings_privacy_security_title">Privacy &amp; Security</string>
+    <string name="settings_privacy_security_subtitle">Manage your privacy settings</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_terms_title">Terms &amp; Conditions</string>
+    <string name="settings_terms_subtitle">Read our terms of service</string>
+    <string name="settings_privacy_policy_title">Privacy Policy</string>
+    <string name="settings_privacy_policy_subtitle">Read our privacy policy</string>
+    <string name="settings_logout_title">Logout</string>
+    <string name="settings_logout_dialog_message">Are you sure you want to logout? You will need to login again to access your account.</string>
+    <string name="settings_cancel_action">Cancel</string>
+    <string name="settings_close_action">Close</string>
+    <string name="settings_version_label">Version 1.0.0</string>
+    <string name="settings_terms_dialog_message">These are placeholder terms for this template. Replace with your product\'s actual terms before release.</string>
+    <string name="settings_privacy_dialog_message">This is a placeholder privacy policy. Replace with your real policy content before release.</string>
 </resources>

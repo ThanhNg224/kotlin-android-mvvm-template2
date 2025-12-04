@@ -49,7 +49,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -95,11 +96,16 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil)
     implementation(libs.coroutines.android)
     implementation(libs.coroutines.core)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     implementation(libs.hilt.android)
     ksp(libs.hilt.kapt)
     implementation(libs.hilt.navigation.compose)

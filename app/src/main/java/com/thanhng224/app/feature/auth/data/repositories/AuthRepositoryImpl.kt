@@ -3,6 +3,7 @@ package com.thanhng224.app.feature.auth.data.repositories
 import com.thanhng224.app.core.di.IoDispatcher
 import com.thanhng224.app.core.util.Result
 import com.thanhng224.app.feature.auth.data.datasources.local.AuthLocalDataSource
+import com.thanhng224.app.feature.auth.data.datasources.remote.AuthRemoteDataSource
 import com.thanhng224.app.feature.auth.domain.entities.User
 import com.thanhng224.app.feature.auth.domain.repositories.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,19 +13,16 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val localDataSource: AuthLocalDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val remoteDataSource: AuthRemoteDataSource,
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : AuthRepository {
 
     override suspend fun login(username: String, password: String): Result<User> {
         return withContext(ioDispatcher) {
             try {
-                // Dummy authentication - replace with actual API call
-                if (username == "admin" && password == "1234") {
-                    localDataSource.setLoggedIn(true)
-                    Result.Success(User(username = username, isLoggedIn = true))
-                } else {
-                    Result.Error(IllegalArgumentException("Invalid username or password"))
-                }
+                val user = remoteDataSource.login(username, password)
+                localDataSource.setLoggedIn(true)
+                Result.Success(user)
             } catch (e: Exception) {
                 Result.Error(e)
             }

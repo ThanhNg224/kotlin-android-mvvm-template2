@@ -121,7 +121,7 @@ fun HomeScreen(productState: UiState<ProductDetails>) {
                     .fillMaxSize()
                     .background(Color.White)
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = 80.dp) // Add bottom padding
+                    .padding(bottom = 80.dp)
             ) {
                 // Header with gradient
                 Box(
