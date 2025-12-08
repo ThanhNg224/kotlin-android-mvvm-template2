@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,8 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -38,14 +35,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.thanhng224.app.presentation.screen.FavoritesScreen
-import com.thanhng224.app.feature.product.presentation.ui.HomeScreen
 import com.thanhng224.app.feature.auth.presentation.ui.LoginScreen
 import com.thanhng224.app.feature.onboarding.presentation.ui.OnboardingScreen
-import com.thanhng224.app.presentation.screen.ProfileScreen
-import com.thanhng224.app.presentation.screen.SettingsScreen
+import com.thanhng224.app.feature.product.presentation.ui.HomeScreen
 import com.thanhng224.app.feature.product.presentation.viewmodel.HomeViewModel
 import com.thanhng224.app.presentation.navigation.Screen
+import com.thanhng224.app.presentation.screen.FavoritesScreen
+import com.thanhng224.app.presentation.screen.ProfileScreen
+import com.thanhng224.app.presentation.screen.SettingsScreen
+import com.thanhng224.app.presentation.ui.theme.Dimens
+import com.thanhng224.app.presentation.ui.theme.KotlinAndroidTemplateTheme
 import com.thanhng224.app.presentation.viewmodel.AppViewModel
 
 @Composable
@@ -57,13 +56,14 @@ fun App(
     val homeViewModel: HomeViewModel = hiltViewModel()
     val productDetailsState by homeViewModel.productDetailsState.collectAsState()
     val startDestination by appViewModel.startDestination.collectAsStateWithLifecycle()
+    val isDarkMode by appViewModel.isDarkMode.collectAsStateWithLifecycle()
 
     if (startDestination == null) {
         // Show loading while determining start destination
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -80,58 +80,62 @@ fun App(
         Screen.Settings.route
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Scaffold(
-            containerColor = Color.Transparent
-        ) { innerPadding ->
-            Box(Modifier.padding(innerPadding)) {
-                NavHost(
-                    navController = navController,
-                    startDestination = startDestination!!
-                ) {
-                    composable(Screen.Onboarding.route) {
-                        OnboardingScreen(
-                            onGetStarted = {
-                                appViewModel.completeOnboarding()
-                                navController.navigate(Screen.Login.route) {
-                                    popUpTo(Screen.Onboarding.route) { inclusive = true }
-                                }
-                            }
-                        )
-                    }
-                    composable(Screen.Login.route) {
-                        LoginScreen(
-                            onLoginSuccess = {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Login.route) { inclusive = true }
-                                }
-                            }
-                        )
-                    }
-                    composable(Screen.Home.route) { HomeScreen(productState = productDetailsState) }
-                    composable(Screen.Favorites.route) { FavoritesScreen() }
-                    composable(Screen.Profile.route) { ProfileScreen() }
-                    composable(Screen.Settings.route) {
-                        SettingsScreen(
-                            onLogout = {
-                                navController.navigate(Screen.Login.route) {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            }
-                        )
-                    }
-                }
-
-                if (showBottomBar) {
-                    FloatingNavBar(
-                        items = items,
+    KotlinAndroidTemplateTheme(darkTheme = isDarkMode) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            Scaffold(
+                containerColor = MaterialTheme.colorScheme.background
+            ) { innerPadding ->
+                Box(Modifier.padding(innerPadding)) {
+                    NavHost(
                         navController = navController,
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    )
+                        startDestination = startDestination!!
+                    ) {
+                        composable(Screen.Onboarding.route) {
+                            OnboardingScreen(
+                                onGetStarted = {
+                                    appViewModel.completeOnboarding()
+                                    navController.navigate(Screen.Login.route) {
+                                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable(Screen.Login.route) {
+                            LoginScreen(
+                                onLoginSuccess = {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(Screen.Login.route) { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable(Screen.Home.route) { HomeScreen(productState = productDetailsState) }
+                        composable(Screen.Favorites.route) { FavoritesScreen() }
+                        composable(Screen.Profile.route) { ProfileScreen() }
+                        composable(Screen.Settings.route) {
+                            SettingsScreen(
+                                onLogout = {
+                                    navController.navigate(Screen.Login.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                },
+                                isDarkTheme = isDarkMode,
+                                onDarkThemeChanged = appViewModel::setDarkMode
+                            )
+                        }
+                    }
+
+                    if (showBottomBar) {
+                        FloatingNavBar(
+                            items = items,
+                            navController = navController,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        )
+                    }
                 }
             }
         }
@@ -146,21 +150,19 @@ private fun FloatingNavBar(
 ) {
     Box(
         modifier = modifier
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = Dimens.spaceMedium)
             .fillMaxWidth()
     ) {
         Surface(
-            shape = RoundedCornerShape(24.dp),
-            tonalElevation = 6.dp,
-            shadowElevation = 6.dp,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .clip(RoundedCornerShape(24.dp))
+            shape = MaterialTheme.shapes.large,
+            tonalElevation = Dimens.mediumElevation,
+            shadowElevation = Dimens.mediumElevation,
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             NavigationBar(
-                containerColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
                 tonalElevation = 0.dp,
-                windowInsets = WindowInsets(0, 0, 0, 0) // 💥 key line
+                windowInsets = WindowInsets(0, 0, 0, 0)
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,17 +23,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.thanhng224.app.R
 import com.thanhng224.app.core.ui.Render
 import com.thanhng224.app.core.util.UiState
 import com.thanhng224.app.feature.product.presentation.model.ProductDetailsUiModel
 import com.thanhng224.app.presentation.ui.theme.AccentColor
 import com.thanhng224.app.presentation.ui.theme.CardBackground
+import com.thanhng224.app.presentation.ui.theme.Dimens
 import com.thanhng224.app.presentation.ui.theme.GradientEnd
 import com.thanhng224.app.presentation.ui.theme.GradientStart
 
@@ -45,27 +45,26 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
-                    modifier = Modifier.padding(32.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    modifier = Modifier.padding(Dimens.spaceXXLarge),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = Dimens.cardElevation),
+                    shape = MaterialTheme.shapes.large
                 ) {
                     Column(
-                        modifier = Modifier.padding(32.dp),
+                        modifier = Modifier.padding(Dimens.spaceXXLarge),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(48.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            strokeWidth = 4.dp
+                            modifier = Modifier.size(Dimens.spaceXXXLarge),
+                            color = MaterialTheme.colorScheme.primary
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceLarge))
                         Text(
-                            text = "Loading amazing products...",
+                            text = stringResource(id = R.string.home_loading_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -77,33 +76,33 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
-                    modifier = Modifier.padding(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    modifier = Modifier.padding(Dimens.spaceXLarge),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = Dimens.cardElevation),
+                    shape = MaterialTheme.shapes.large
                 ) {
                     Column(
-                        modifier = Modifier.padding(24.dp),
+                        modifier = Modifier.padding(Dimens.spaceXLarge),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "ƒsÿ‹,?",
+                            text = stringResource(id = R.string.home_error_icon_text),
                             style = MaterialTheme.typography.headlineLarge
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceSmall))
                         Text(
-                            text = "Oops! Something went wrong",
+                            text = stringResource(id = R.string.home_error_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceSmall))
                         Text(
-                            text = throwable.message ?: "Unknown error",
+                            text = throwable.message ?: stringResource(id = R.string.home_error_unknown),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
                             textAlign = TextAlign.Center
@@ -116,15 +115,15 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
-                .padding(bottom = 80.dp)
+                .padding(bottom = Dimens.spaceHuge)
         ) {
             // Header with gradient
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(Dimens.heroHeight)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(GradientStart, GradientEnd)
@@ -134,52 +133,52 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(24.dp),
+                        .padding(Dimens.spaceXLarge),
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "ƒo\" Product Showcase",
+                        text = stringResource(id = R.string.home_header_title),
                         style = MaterialTheme.typography.headlineLarge,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(Dimens.spaceSmall))
                     Text(
-                        text = "Discover amazing products",
+                        text = stringResource(id = R.string.home_header_subtitle),
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                     )
                 }
             }
 
             // Content Cards
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.padding(Dimens.spaceLarge),
+                verticalArrangement = Arrangement.spacedBy(Dimens.spaceLarge)
             ) {
                 // Product Image Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = Dimens.sectionElevation),
+                    shape = MaterialTheme.shapes.large
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(Dimens.spaceLarge)) {
                         Text(
-                            text = "dY\", Product Gallery",
+                            text = stringResource(id = R.string.home_gallery_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceMedium))
                         data.primaryImage?.let { imageUrl ->
                             Image(
                                 painter = rememberAsyncImagePainter(imageUrl),
-                                contentDescription = "Product Image",
+                                contentDescription = stringResource(id = R.string.home_gallery_content_description),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(200.dp)
-                                    .clip(RoundedCornerShape(12.dp)),
+                                    .height(Dimens.galleryHeight)
+                                    .clip(MaterialTheme.shapes.medium),
                                 contentScale = ContentScale.Crop
                             )
                         }
@@ -190,17 +189,17 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = CardBackground),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = Dimens.sectionElevation),
+                    shape = MaterialTheme.shapes.large
                 ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
+                    Column(modifier = Modifier.padding(Dimens.spaceBetweenLarge)) {
                         Text(
-                            text = "dY?ú‹,? Brand",
+                            text = stringResource(id = R.string.home_brand_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = AccentColor
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceSmall))
                         Text(
                             text = data.brand,
                             style = MaterialTheme.typography.headlineMedium,
@@ -213,18 +212,18 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
                 // Description Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = Dimens.sectionElevation),
+                    shape = MaterialTheme.shapes.large
                 ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
+                    Column(modifier = Modifier.padding(Dimens.spaceBetweenLarge)) {
                         Text(
-                            text = "dY\"? Description",
+                            text = stringResource(id = R.string.home_description_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.secondary
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(Dimens.spaceMedium))
                         Text(
                             text = data.description,
                             style = MaterialTheme.typography.bodyLarge,
@@ -235,7 +234,7 @@ fun HomeScreen(productState: UiState<ProductDetailsUiModel>) {
                 }
 
                 // Bottom spacing
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(Dimens.spaceXXLarge))
             }
         }
     }

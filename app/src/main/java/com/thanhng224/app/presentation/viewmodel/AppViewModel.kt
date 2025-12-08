@@ -22,6 +22,8 @@ class AppViewModel @Inject constructor(
 ) : ViewModel() {
     private val _startDestination = MutableStateFlow<String?>(null)
     val startDestination: StateFlow<String?> = _startDestination.asStateFlow()
+    private val _isDarkMode = MutableStateFlow(false)
+    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -40,6 +42,10 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             completeOnboardingUseCase()
         }
+    }
+
+    fun setDarkMode(enabled: Boolean) {
+        _isDarkMode.value = enabled
     }
 }
 

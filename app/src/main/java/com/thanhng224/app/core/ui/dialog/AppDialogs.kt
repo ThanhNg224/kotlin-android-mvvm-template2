@@ -11,8 +11,14 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.Button
@@ -26,9 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.thanhng224.app.R
+import com.thanhng224.app.presentation.ui.theme.Dimens
 
 /**
  * Simple animated dialog container for Compose screens. Keep state hoisted and
@@ -90,13 +98,13 @@ fun BaseDialog(
                     Surface(
                         modifier = modifier
                             .fillMaxWidth(0.9f),
-                        shape = RoundedCornerShape(20.dp),
-                        tonalElevation = 6.dp,
-                        shadowElevation = 10.dp
+                        shape = MaterialTheme.shapes.large,
+                        tonalElevation = Dimens.mediumElevation,
+                        shadowElevation = Dimens.highElevation
                     ) {
                         Column(
-                            modifier = Modifier.padding(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.padding(Dimens.spaceBetweenLarge),
+                            verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             icon?.let {
@@ -126,8 +134,8 @@ fun BaseDialog(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                    .padding(top = Dimens.spaceSmall),
+                                horizontalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
                             ) {
                                 if (secondaryActionText != null && onSecondaryAction != null) {
                                     OutlinedButton(
@@ -161,20 +169,23 @@ fun BaseDialog(
 @Composable
 fun FailureDialog(
     visible: Boolean,
-    title: String = "Something went wrong",
+    title: String? = null,
     message: String? = null,
     onDismiss: () -> Unit,
-    primaryActionText: String = "OK",
+    primaryActionText: String? = null,
     onPrimaryAction: (() -> Unit)? = null,
 ) {
+    val resolvedTitle = title ?: stringResource(id = R.string.dialog_failure_title)
+    val resolvedPrimaryText = primaryActionText ?: stringResource(id = R.string.dialog_primary_action_ok)
+
     BaseDialog(
         visible = visible,
         onDismiss = onDismiss,
         icon = Icons.Filled.ErrorOutline,
         iconTint = MaterialTheme.colorScheme.error,
-        title = title,
+        title = resolvedTitle,
         message = message,
-        primaryActionText = primaryActionText,
+        primaryActionText = resolvedPrimaryText,
         onPrimaryAction = onPrimaryAction ?: onDismiss
     )
 }

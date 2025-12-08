@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -50,33 +49,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.thanhng224.app.R
 import com.thanhng224.app.core.ui.dialog.BaseDialog
 import com.thanhng224.app.core.ui.dialog.SlideVerticalEnter
 import com.thanhng224.app.core.ui.dialog.SlideVerticalExit
+import com.thanhng224.app.presentation.ui.theme.Dimens
 import com.thanhng224.app.presentation.viewmodel.SettingsUiState
 import com.thanhng224.app.presentation.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
     onLogout: () -> Unit = {},
+    isDarkTheme: Boolean,
+    onDarkThemeChanged: (Boolean) -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
 
-    uiState.snackbarMessageRes?.let { resId ->
-        LaunchedEffect(resId) {
-            snackbarHostState.showSnackbar(context.getString(resId))
+    val snackbarMessage = uiState.snackbarMessageRes?.let { stringResource(id = it) }
+
+    if (snackbarMessage != null) {
+        LaunchedEffect(snackbarMessage) {
+            snackbarHostState.showSnackbar(snackbarMessage)
             viewModel.onSnackbarShown()
         }
     }
@@ -90,21 +90,25 @@ fun SettingsScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color.Transparent
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(innerPadding)
         ) {
             SettingsContent(
                 uiState = uiState,
                 onNotificationsToggled = viewModel::onNotificationsToggled,
-                onDarkModeToggled = viewModel::onDarkModeToggled,
+                onDarkModeToggled = { enabled ->
+                    onDarkThemeChanged(enabled)
+                    viewModel.onDarkModeToggled(enabled)
+                },
                 onShowTerms = viewModel::onShowTermsDialog,
                 onShowPrivacy = viewModel::onShowPrivacyDialog,
-                onLogoutClick = viewModel::onLogoutDialogShown
+                onLogoutClick = viewModel::onLogoutDialogShown,
+                isDarkTheme = isDarkTheme
             )
         }
     }
@@ -125,6 +129,10 @@ fun SettingsScreen(
             onDismiss = viewModel::onLogoutDialogDismissed
         )
     }
+
+    LaunchedEffect(isDarkTheme) {
+        viewModel.setDarkMode(isDarkTheme)
+    }
 }
 
 @Composable
@@ -134,19 +142,20 @@ private fun SettingsContent(
     onDarkModeToggled: (Boolean) -> Unit,
     onShowTerms: () -> Unit,
     onShowPrivacy: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    isDarkTheme: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(Dimens.spaceLarge)
     ) {
         SettingsHeader()
         ProfileSection()
         PreferencesSection(
             notificationsEnabled = uiState.notificationsEnabled,
-            darkModeEnabled = uiState.darkModeEnabled,
+            darkModeEnabled = isDarkTheme,
             onNotificationsToggled = onNotificationsToggled,
             onDarkModeToggled = onDarkModeToggled
         )
@@ -166,7 +175,7 @@ private fun SettingsHeader() {
         style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(vertical = 16.dp)
+        modifier = Modifier.padding(vertical = Dimens.spaceLarge)
     )
 }
 
@@ -175,23 +184,23 @@ private fun ProfileSection() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(bottom = Dimens.spaceLarge),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.lowElevation)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { }
-                .padding(16.dp),
+                .padding(Dimens.spaceLarge),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(Dimens.avatarLarge)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
@@ -199,12 +208,12 @@ private fun ProfileSection() {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(40.dp)
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(Dimens.iconXL)
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(Dimens.spaceLarge))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -247,7 +256,7 @@ private fun PreferencesSection(
             onCheckedChange = onNotificationsToggled
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = Dimens.spaceLarge))
 
         SettingsToggleItem(
             icon = Icons.Default.DarkMode,
@@ -257,7 +266,7 @@ private fun PreferencesSection(
             onCheckedChange = onDarkModeToggled
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = Dimens.spaceLarge))
 
         SettingsNavigationItem(
             icon = Icons.Default.Language,
@@ -280,7 +289,7 @@ private fun AccountSection() {
             onClick = { }
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = Dimens.spaceLarge))
 
         SettingsNavigationItem(
             icon = Icons.Default.Lock,
@@ -289,7 +298,7 @@ private fun AccountSection() {
             onClick = { }
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = Dimens.spaceLarge))
 
         SettingsNavigationItem(
             icon = Icons.Default.Security,
@@ -315,7 +324,7 @@ private fun AboutSection(
             onClick = onShowTerms
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = Dimens.spaceLarge))
 
         SettingsNavigationItem(
             icon = Icons.Default.PrivacyTip,
@@ -328,24 +337,24 @@ private fun AboutSection(
 
 @Composable
 private fun LogoutSection(onLogoutClick: () -> Unit) {
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.height(Dimens.spaceXLarge))
 
     Button(
         onClick = onLogoutClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(Dimens.buttonHeight),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.error
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = MaterialTheme.shapes.medium
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.Logout,
             contentDescription = null,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(Dimens.iconSmall)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(Dimens.spaceSmall))
         Text(
             text = stringResource(id = R.string.settings_logout_title),
             style = MaterialTheme.typography.titleMedium,
@@ -353,7 +362,7 @@ private fun LogoutSection(onLogoutClick: () -> Unit) {
         )
     }
 
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(Dimens.spaceSmall))
 
       Text(
         text = stringResource(id = R.string.settings_version_label),
@@ -363,7 +372,7 @@ private fun LogoutSection(onLogoutClick: () -> Unit) {
         textAlign = androidx.compose.ui.text.style.TextAlign.Center
     )
 
-    Spacer(modifier = Modifier.height(80.dp))
+    Spacer(modifier = Modifier.height(Dimens.spaceHuge))
 }
 
 @Composable
@@ -373,7 +382,10 @@ private fun SettingsSectionTitle(title: String) {
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+        modifier = Modifier.padding(
+            vertical = Dimens.spaceSmall,
+            horizontal = Dimens.spaceXSmall
+        )
     )
 }
 
@@ -381,11 +393,11 @@ private fun SettingsSectionTitle(title: String) {
 private fun SettingsCard(content: @Composable () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = Dimens.lowElevation)
     ) {
         content()
     }
@@ -402,22 +414,22 @@ private fun SettingsNavigationItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        color = Color.Transparent
+        color = MaterialTheme.colorScheme.surface
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(Dimens.spaceLarge),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(Dimens.iconMedium)
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(Dimens.spaceLarge))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -437,7 +449,7 @@ private fun SettingsNavigationItem(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(Dimens.iconSmall)
             )
         }
     }
@@ -454,17 +466,17 @@ private fun SettingsToggleItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(Dimens.spaceLarge),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(Dimens.iconMedium)
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(Dimens.spaceLarge))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -566,6 +578,6 @@ private fun LogoutDialog(
                 Text(stringResource(id = R.string.settings_cancel_action))
             }
         },
-        shape = RoundedCornerShape(16.dp)
+        shape = MaterialTheme.shapes.large
     )
 }

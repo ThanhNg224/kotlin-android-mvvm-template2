@@ -50,6 +50,10 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { it.copy(darkModeEnabled = enabled) }
     }
 
+    fun setDarkMode(enabled: Boolean) {
+        _uiState.update { it.copy(darkModeEnabled = enabled) }
+    }
+
     fun onShowTermsDialog() {
         _uiState.update { it.copy(showTermsDialog = true) }
     }

@@ -10,51 +10,59 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.thanhng224.app.R
+import com.thanhng224.app.presentation.ui.theme.Dimens
+import com.thanhng224.app.presentation.ui.theme.AccentColor
+import com.thanhng224.app.presentation.ui.theme.CardBackground
+import com.thanhng224.app.presentation.ui.theme.GradientEnd
+import com.thanhng224.app.presentation.ui.theme.GradientStart
+import com.thanhng224.app.presentation.ui.theme.Primary
+import com.thanhng224.app.presentation.ui.theme.PrimaryVariant
+import com.thanhng224.app.presentation.ui.theme.Secondary
+import com.thanhng224.app.presentation.ui.theme.SecondaryVariant
 
 @Composable
 fun FavoritesScreen() {
     val colors = listOf(
-        Color(0xFFFADADD),
-        Color(0xFFE6E6FA),
-        Color(0xFFD8BFD8),
-        Color(0xFFFFDAB9),
-        Color(0xFFE0FFFF),
-        Color(0xFFFFF0F5),
-        Color(0xFFF5FFFA),
-        Color(0xFFFAFAD2)
+        Primary,
+        PrimaryVariant,
+        Secondary,
+        SecondaryVariant,
+        CardBackground,
+        GradientStart,
+        GradientEnd,
+        AccentColor
     )
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding()
-            .padding(bottom = 80.dp),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(bottom = Dimens.spaceHuge),
+        contentPadding = PaddingValues(Dimens.spaceLarge),
+        verticalArrangement = Arrangement.spacedBy(Dimens.spaceMedium)
     ) {
         items(20) { index ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .height(Dimens.listItemHeight)
+                    .clip(MaterialTheme.shapes.large)
                     .background(colors[index % colors.size])
-                    .padding(16.dp),
+                    .padding(Dimens.spaceLarge),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Favorite Item ${index + 1}",
-                    fontSize = 20.sp,
-                    color = Color.Black.copy(alpha = 0.7f)
+                    text = stringResource(id = R.string.favorites_item_label, index + 1),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
