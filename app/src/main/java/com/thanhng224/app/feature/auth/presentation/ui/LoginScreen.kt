@@ -36,17 +36,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.thanhng224.app.R
 import com.thanhng224.app.feature.auth.presentation.viewmodel.LoginViewModel
+import com.thanhng224.app.presentation.ui.theme.Dimens
 
 @Composable
 fun LoginScreen(
@@ -60,47 +61,50 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp),
+                .padding(Dimens.spaceXXLarge),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Lock,
-                contentDescription = "Login",
-                modifier = Modifier.size(80.dp),
+                contentDescription = stringResource(id = R.string.login_icon_content_description),
+                modifier = Modifier.size(Dimens.iconLarge),
                 tint = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceXLarge))
 
             Text(
-                text = "Welcome Back",
+                text = stringResource(id = R.string.login_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceSmall))
 
             Text(
-                text = "Sign in to continue",
+                text = stringResource(id = R.string.login_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceXXLarge))
 
             OutlinedTextField(
                 value = loginState.username,
                 onValueChange = viewModel::onUsernameChange,
-                label = { Text("Username") },
+                label = { Text(stringResource(id = R.string.login_username_label)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = "Username")
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = stringResource(id = R.string.login_username_content_description)
+                    )
                 },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -111,7 +115,7 @@ fun LoginScreen(
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
-                shape = RoundedCornerShape(12.dp),
+                shape = MaterialTheme.shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline
@@ -119,20 +123,29 @@ fun LoginScreen(
                 enabled = !loginState.isLoading
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceLarge))
 
             OutlinedTextField(
                 value = loginState.password,
                 onValueChange = viewModel::onPasswordChange,
-                label = { Text("Password") },
+                label = { Text(stringResource(id = R.string.login_password_label)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = "Password")
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = stringResource(id = R.string.login_password_content_description)
+                    )
                 },
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            contentDescription = stringResource(
+                                id = if (passwordVisible) {
+                                    R.string.login_hide_password
+                                } else {
+                                    R.string.login_show_password
+                                }
+                            )
                         )
                     }
                 },
@@ -149,7 +162,7 @@ fun LoginScreen(
                         viewModel.login(onLoginSuccess)
                     }
                 ),
-                shape = RoundedCornerShape(12.dp),
+                shape = MaterialTheme.shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline
@@ -158,7 +171,7 @@ fun LoginScreen(
             )
 
             if (loginState.errorMessage != null) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Dimens.spaceSmall))
                 Text(
                     text = loginState.errorMessage!!,
                     color = MaterialTheme.colorScheme.error,
@@ -167,37 +180,37 @@ fun LoginScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceXXLarge))
 
             Button(
                 onClick = { viewModel.login(onLoginSuccess) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(Dimens.buttonHeight),
                 enabled = !loginState.isLoading && loginState.username.isNotBlank() && loginState.password.isNotBlank(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = MaterialTheme.shapes.medium
             ) {
                 if (loginState.isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(Dimens.iconMedium),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
                     Text(
-                        text = "Sign In",
+                        text = stringResource(id = R.string.login_sign_in),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.spaceLarge))
 
             Text(
-                text = "Hint: Use 'admin' / '1234' to login",
+                text = stringResource(id = R.string.login_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center

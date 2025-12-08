@@ -16,9 +16,19 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DarkPrimary,
+    secondary = DarkSecondary,
+    tertiary = AccentColor,
+    background = DarkBackground,
+    surface = DarkSurface,
+    error = Error,
+    onPrimary = DarkOnPrimary,
+    onSecondary = DarkOnSecondary,
+    onBackground = DarkOnBackground,
+    onSurface = DarkOnSurface,
+    onError = OnError,
+    primaryContainer = PrimaryVariant,
+    secondaryContainer = SecondaryVariant
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -67,6 +77,7 @@ fun KotlinAndroidTemplateTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = AppShapes,
         content = content
     )
 }

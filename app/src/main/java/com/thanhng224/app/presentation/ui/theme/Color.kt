@@ -24,6 +24,16 @@ val OnBackground = Color(0xFF1E293B)
 val OnSurface = Color(0xFF334155)
 val OnError = Color(0xFFFFFFFF)
 
+// Dark palette
+val DarkPrimary = Color(0xFF8B93F9)
+val DarkSecondary = Color(0xFF34D399)
+val DarkBackground = Color(0xFF0F172A)
+val DarkSurface = Color(0xFF111827)
+val DarkOnPrimary = Color(0xFF0B1120)
+val DarkOnSecondary = Color(0xFF0B1120)
+val DarkOnBackground = Color(0xFFE5E7EB)
+val DarkOnSurface = Color(0xFFE5E7EB)
+
 // Gradient colors
 val GradientStart = Color(0xFF667EEA)
 val GradientEnd = Color(0xFF764BA2)
