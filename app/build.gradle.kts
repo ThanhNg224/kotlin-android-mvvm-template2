@@ -3,7 +3,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
@@ -18,13 +17,13 @@ detekt {
 android {
     // TODO: Set Namespace
     namespace = "com.thanhng224.app"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         // TODO: Set Package Name
         applicationId = "com.thanhng224.app"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
