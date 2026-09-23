@@ -10,10 +10,9 @@ class AuthRemoteDataSource @Inject constructor() {
 
     fun login(username: String, password: String): User {
         // Dummy authentication - swap with Retrofit call or SDK integration
-        if (username == "admin" && password == "1234") {
-            return User(username = username, isLoggedIn = true)
-        } else {
-            throw IllegalArgumentException("Invalid username or password")
+        require(username == "admin" && password == "1234") {
+            "Invalid username or password"
         }
+        return User(username = username, isLoggedIn = true)
     }
 }

@@ -9,21 +9,22 @@ class LoginUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(username: String, password: String): Result<User> {
-        // Validation logic
-        if (username.isBlank()) {
-            return Result.Error(IllegalArgumentException("Username cannot be empty"))
+        val validationError = when {
+            username.isBlank() -> "Username cannot be empty"
+            password.isBlank() -> "Password cannot be empty"
+            password.length < MIN_PASSWORD_LENGTH -> "Password must be at least $MIN_PASSWORD_LENGTH characters"
+            else -> null
         }
 
-        if (password.isBlank()) {
-            return Result.Error(IllegalArgumentException("Password cannot be empty"))
-        }
-
-        // Business rule: minimum password length
-        if (password.length < 4) {
-            return Result.Error(IllegalArgumentException("Password must be at least 4 characters"))
+        if (validationError != null) {
+            return Result.Error(IllegalArgumentException(validationError))
         }
 
         return authRepository.login(username, password)
+    }
+
+    companion object {
+        private const val MIN_PASSWORD_LENGTH = 4
     }
 }
 
