@@ -16,7 +16,7 @@ hilt-navigation-compose = "1.4.0"
 dagger-hilt = "2.60.1"
 coil = "2.7.0"
 navigation-compose = "2.9.6"
-ksp = "2.3.4"
+ksp = "2.3.12"
 datastore = "1.2.0"
 room = "2.8.5"
 
