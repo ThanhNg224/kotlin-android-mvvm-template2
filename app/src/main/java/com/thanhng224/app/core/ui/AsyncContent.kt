@@ -30,7 +30,7 @@ fun <T> UiState<T>.Render(
 ) {
     when {
         isLoading -> loading()
-        isError -> error(error ?: Throwable(stringResource(id = R.string.error_unknown)))
+        isError -> error(this@Render.error ?: Throwable(stringResource(id = R.string.error_unknown)))
         isSuccess -> success(data!!)
     }
 }
